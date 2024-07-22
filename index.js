@@ -35,3 +35,29 @@ app.post('/api/tasks', async (req, res) => {
     res.status(500).json({message: error.message});
   }
 })
+
+app.get('/api/task/:id', async (req, res) => {
+  try {
+    const {id} = req.params;
+    const task = await Task.findById(req.params.id);
+    res.status(200).json(task);
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+})
+
+app.put('/api/task/:id', async (req, res) => {
+  try {
+    const {id} = req.params;
+    const task = await Task.findByIdAndUpdate(id, req.body);
+    if(!task) {
+      return res.status(404).json({message: 'Task not found'});
+    }
+
+    const updatedTask =await Task.findById(id);
+    res.status(200).json(updatedTask);
+
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+})
